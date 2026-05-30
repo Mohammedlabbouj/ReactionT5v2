@@ -218,7 +218,7 @@ if __name__ == "__main__":
 
     args = Seq2SeqTrainingArguments(
         CFG.output_dir,
-        eval_strategy=CFG.evaluation_strategy,
+        evaluation_strategy=CFG.evaluation_strategy,
         save_strategy=CFG.save_strategy,
         logging_strategy=CFG.logging_strategy,
         learning_rate=CFG.lr,
