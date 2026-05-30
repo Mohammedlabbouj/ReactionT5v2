@@ -58,7 +58,7 @@ def parse_args():
         "--debug", action="store_true", default=False, help="Enable debug mode."
     )
     parser.add_argument(
-        "--epochs", type=int, default=3, help="Number of epochs for training."
+        "--epochs", type=int, default=100, help="Number of epochs for training."
     )
     parser.add_argument("--lr", type=float, default=2e-5, help="Learning rate.")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size.")
@@ -246,7 +246,7 @@ if __name__ == "__main__":
         data_collator=data_collator,
         tokenizer=tokenizer,
         compute_metrics=lambda eval_preds: get_accuracy_score(eval_preds, CFG),
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=10)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=25)],
     )
 
     trainer.train()
