@@ -1,7 +1,9 @@
 import argparse
+import json
 import os
 import sys
 import warnings
+from datetime import datetime
 
 import datasets
 import pandas as pd
@@ -14,6 +16,7 @@ from transformers import (
     EarlyStoppingCallback,
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
+    TrainerCallback,
 )
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -23,6 +26,60 @@ from utils import filter_out, get_accuracy_score, preprocess_dataset, seed_every
 # Suppress warnings and disable progress bars
 warnings.filterwarnings("ignore")
 datasets.utils.logging.disable_progress_bar()
+
+
+class TextFileLoggingCallback(TrainerCallback):
+    def __init__(self, log_path, train_size, valid_size):
+        self.log_path = log_path
+        self.train_size = train_size
+        self.valid_size = valid_size
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        with open(self.log_path, "w", encoding="utf-8") as f:
+            f.write(f"Training log started: {datetime.now().isoformat(timespec='seconds')}\n")
+
+    def _write(self, message):
+        with open(self.log_path, "a", encoding="utf-8") as f:
+            f.write(message + "\n")
+
+    @staticmethod
+    def _format_logs(logs):
+        parts = []
+        for key, value in sorted(logs.items()):
+            if key == "epoch":
+                continue
+            if isinstance(value, float):
+                parts.append(f"{key}={value:.6g}")
+            else:
+                parts.append(f"{key}={value}")
+        return ", ".join(parts)
+
+    def on_train_begin(self, args, state, control, **kwargs):
+        self._write(f"Output directory: {args.output_dir}")
+        self._write(f"Train samples: {self.train_size}")
+        self._write(f"Validation samples: {self.valid_size}")
+        self._write(f"Configured epochs: {args.num_train_epochs}")
+        self._write(f"Max optimization steps: {state.max_steps}")
+        self._write("")
+
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if not logs:
+            return
+        epoch = logs.get("epoch", state.epoch)
+        epoch_text = f"{epoch:.2f}" if isinstance(epoch, float) else str(epoch)
+        formatted_logs = self._format_logs(logs)
+        if formatted_logs:
+            self._write(f"Epoch {epoch_text} | step {state.global_step}: {formatted_logs}")
+
+    def on_save(self, args, state, control, **kwargs):
+        self._write(f"Checkpoint saved at step {state.global_step}: {state.best_model_checkpoint or args.output_dir}")
+
+    def on_train_end(self, args, state, control, **kwargs):
+        self._write("")
+        self._write(f"Training finished: {datetime.now().isoformat(timespec='seconds')}")
+        self._write(f"Epochs completed: {state.epoch}")
+        self._write(f"Steps completed: {state.global_step}")
+        self._write(f"Best metric: {state.best_metric}")
+        self._write(f"Best checkpoint: {state.best_model_checkpoint}")
 
 
 def parse_args():
@@ -219,8 +276,11 @@ if __name__ == "__main__":
     args = Seq2SeqTrainingArguments(
         CFG.output_dir,
         evaluation_strategy=CFG.evaluation_strategy,
+        eval_steps=CFG.eval_steps,
         save_strategy=CFG.save_strategy,
+        save_steps=CFG.save_steps,
         logging_strategy=CFG.logging_strategy,
+        logging_steps=CFG.logging_steps,
         learning_rate=CFG.lr,
         per_device_train_batch_size=CFG.batch_size,
         per_device_eval_batch_size=CFG.batch_size * 4,
@@ -238,6 +298,7 @@ if __name__ == "__main__":
 
     model.config.eval_beams = CFG.eval_beams
     model.config.max_length = CFG.target_max_length
+    log_file_path = os.path.join(CFG.output_dir, "log.txt")
     trainer = Seq2SeqTrainer(
         model,
         args,
@@ -246,8 +307,22 @@ if __name__ == "__main__":
         data_collator=data_collator,
         tokenizer=tokenizer,
         compute_metrics=lambda eval_preds: get_accuracy_score(eval_preds, CFG),
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=25)],
+        callbacks=[
+            EarlyStoppingCallback(early_stopping_patience=25),
+            TextFileLoggingCallback(log_file_path, len(train), len(valid)),
+        ],
     )
 
-    trainer.train()
+    train_result = trainer.train()
+    trainer.save_metrics("train", train_result.metrics)
+    trainer.save_state()
+
+    os.makedirs(CFG.output_dir, exist_ok=True)
+    log_history_path = os.path.join(CFG.output_dir, "log_history.json")
+    with open(log_history_path, "w", encoding="utf-8") as f:
+        json.dump(trainer.state.log_history, f, indent=2)
+    pd.DataFrame(trainer.state.log_history).to_csv(
+        os.path.join(CFG.output_dir, "log_history.csv"), index=False
+    )
+
     trainer.save_model("./best_model")

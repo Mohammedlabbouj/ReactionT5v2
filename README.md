@@ -1,4 +1,8 @@
+{'eval_loss': 0.02932211384177208, 'eval_accuracy': 0.8627765309394037, 'eval_runtime': 111.011,
+'eval_samples_per_second': 28.096, 'eval_steps_per_second': 0.441, 'epoch': 20.0}
+
 # ReactionT5v2
+
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white&style=flat)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Transformers](https://img.shields.io/badge/transformers-4.40.2-FFD21E?logo=huggingface&logoColor=white&style=flat)](https://huggingface.co/docs/transformers/en/installation)
@@ -10,24 +14,25 @@ ReactionT5 is a T5 model pretrained on a vast array of chemical reactions from t
 
 ![model image](https://github.com/sagawatatsuya/ReactionT5v2/blob/main/model-image.png)
 
-
 In this repository, we will demonstrate how to use ReactionT5 for product prediction, retrosynthesis prediction, and yield prediction on your own datasets. The pretrained models and demo is available at [Hugging Face Hub](https://huggingface.co/collections/sagawa/reactiont5-67dbe0550cbb6886a85e348b) or [Google Colab](https://colab.research.google.com/drive/10Hkx8YJTG5JGXj73XfnEYxZ8fDnsJRcs?usp=sharing)
 
 # Table of Contents
-- [ReactionT5v2](#reactiont5v2)  
-  - [Setup](#setup)  
-  - [Dataset](#dataset)
-  - [Usage](#usage)  
-  - [Fine-tuning](#fine-tuning)  
-  - [Compound Pre-training](#compound-pre-training)  
-  - [Reaction Pre-training](#reaction-pre-training)  
-  - [Structure](#structure) 
-  - [Authors](#authors)
-  - [Citation](#citation)  
 
+- [ReactionT5v2](#reactiont5v2)
+  - [Setup](#setup)
+  - [Dataset](#dataset)
+  - [Usage](#usage)
+  - [Fine-tuning](#fine-tuning)
+  - [Compound Pre-training](#compound-pre-training)
+  - [Reaction Pre-training](#reaction-pre-training)
+  - [Structure](#structure)
+  - [Authors](#authors)
+  - [Citation](#citation)
 
 # Setup
+
 ReactionT5 is based on the transformers library. Additionally, RDKit is used for validity check of predicted compounds. To install these and other necessary libraries, use the following commands:
+
 ```
 pip install rdkit
 pip install torch
@@ -39,18 +44,22 @@ pip install sentencepiece
 ```
 
 # Dataset
+
 For model training and finetuning, we used the ORD dataset, USPTO_MIT dataset, USPTO_50k dataset, and C-N cross-coupling reactions dataset. Each dataset can be downloaded from the following links:
+
 - [ORD](https://drive.google.com/file/d/1JozA2OlByfZ-ILt5H5YrTjLJvSvD8xdL/view?usp=drive_link)
 - [USPTO_MIT](https://drive.google.com/file/d/1NEb5DSwqFfg4gm0P2lPb19cqPt96-OSC/view?usp=drive_link)
 - [USPTO_50k](https://drive.google.com/file/d/15-E4eaxsUJ_aKxX0mnOrvYCTWKpqrLvf/view?usp=drive_link)
 - [Buchwald-Hartwig C-N cross-coupling](https://drive.google.com/file/d/1qvsJk1_q1yfJvBYtEMGOcCuk2pRvsWvy/view?usp=drive_link)
 
-
 # Usage
+
 You can use ReactionT5 for product prediction, retrosynthesis prediction, and yield prediction.
 
 ### Task: Forward
+
 To predict the products of reactions from their inputs, use the following command. The code expects 'input_data' as a CSV file that contains columns named 'REACTANT', 'REAGENT', and 'PRODUCT'; each has SMILES information. If there is no reagent information, fill in the blank with ' '. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_forward
 python prediction.py \
@@ -64,7 +73,9 @@ python prediction.py \
 ```
 
 ### Task: Retrosynthesis
+
 To predict the reactants of reactions from their products, use the following command. The code expects 'input_data' as a CSV file that contains a "PRODUCT" column. The format of the contents of the column should be SMILES of each compound. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_retrosynthesis
 python prediction.py \
@@ -78,7 +89,9 @@ python prediction.py \
 ```
 
 ### Task: Yield
+
 To predict the yields of reactions from their inputs, use the following command. The code expects 'input_data' as a CSV file that contains columns named 'REACTANT', 'REAGENT', 'PRODUCT', and 'YIELD'; except 'YIELD' have SMILES information, and 'YIELD' has numerical information. If there is no reagent information, fill in the blank with ' '. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_yield
 python prediction_with_PreTrainedModel.py \
@@ -88,12 +101,14 @@ python prediction_with_PreTrainedModel.py \
     --output_dir="output"
 ```
 
-
 # Fine-tuning
+
 If your dataset is very specific and different from ORD's data, ReactionT5 may not predict well. In that case, you can fine-tune ReactionT5 on your dataset. From our study, ReactionT5's performance drastically improved its performance by fine-tuning using relatively small data (100 reactions).
 
 ### Task: Forward
+
 Specify your training and validation data used for fine-tuning and run the following command. The code expects train and valid data that contain columns named 'REACTANT', 'REAGENT', and 'PRODUCT'; each has SMILES information. If there is no reagent information, fill in the blank with ' '. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_forward
 python finetune.py \
@@ -106,7 +121,9 @@ python finetune.py \
 ```
 
 ### Task: Retrosynthesis
+
 Specify your training and validation data used for fine-tuning and run the following command. The code expects train and valid data that contain columns named 'REACTANT' and 'PRODUCT'; each has SMILES information. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_retrosynthesis
 python finetune.py \
@@ -119,7 +136,9 @@ python finetune.py \
 ```
 
 ### Task: Yield
+
 Specify your training and validation data used for fine-tuning and run the following command. The code expects train and valid data that contain columns named 'REACTANT', 'REAGENT', 'PRODUCT', and 'YIELD'; except 'YIELD ' have SMILES information, and 'YIELD' has numerical information. If there is no reagent information, fill in the blank with ' '. For multiple compounds, concatenate them with ".".
+
 ```
 cd task_yield
 python finetune.py \
@@ -132,21 +151,25 @@ python finetune.py \
 ```
 
 # Compound Pre-training
+
 If you want to retrain CompoundT5 (compound pre-training), please refer to the [README.md](./CompoundT5/README.md) file located inside the CompoundT5 directory.
 
-
 # Reaction Pre-training
+
 If you want to retrain ReactionT5 from CompoundT5 (reaction pre-training), you can do so by running the following commands. These will train ReactionT5 on the Open Reaction Database (ORD) dataset.
 
 ### Dataset
+
 Download the preprocessed ORD dataset from [here](https://drive.google.com/file/d/1JozA2OlByfZ-ILt5H5YrTjLJvSvD8xdL/view?usp=drive_link) and place it in the data/ORD directory.  
 To prevent data leakage in downstream benchmarks, we specify either 'USPTO_test_data_path' or 'CN_test_data_path' in the training commands below and remove any duplicated reactions from the training data. You can also train ReactionT5 on full ORD data without specifying these parameters.  
 The corresponding test datasets can be downloaded from the following links:
+
 - [USPTO_MIT](https://drive.google.com/file/d/1NEb5DSwqFfg4gm0P2lPb19cqPt96-OSC/view?usp=drive_link)
 - [USPTO_50k](https://drive.google.com/file/d/15-E4eaxsUJ_aKxX0mnOrvYCTWKpqrLvf/view?usp=drive_link)
 - [Buchwald-Hartwig C-N cross-coupling](https://drive.google.com/file/d/1qvsJk1_q1yfJvBYtEMGOcCuk2pRvsWvy/view?usp=drive_link)
 
 ### Task: Forward
+
 ```
 cd task_forward
 python train.py \
@@ -168,7 +191,9 @@ python train.py \
     --disable_tqdm \
     --pretrained_model_name_or_path='sagawa/CompoundT5'
 ```
+
 ### Task: Retrosynthesis
+
 ```
 cd task_retrosynthesis
 python train.py \
@@ -190,7 +215,9 @@ python train.py \
     --disable_tqdm \
     --pretrained_model_name_or_path='sagawa/CompoundT5'
 ```
+
 ### Task: Yield
+
 ```
 cd task_yield
 python train.py \
@@ -205,24 +232,25 @@ python train.py \
     --batch_size=32
 ```
 
-
 # Structure
-```
-ReactionT5v2/  
-├── CompoundT5/                     # Codes used for data processing and compound pretraining  
-│ └── README.md                     # More detailed README file for CompoundT5 creation  
-├── data/                           # Datasets  
-├── task_forward/                   # Forward prediction and finetuning  
-├── task_retrosynthesis/            # Retrosynthesis prediction and finetuning  
-├── task_yield/                     # Yield prediction and finetuning  
-└── README.md                       # This README file  
-```
 
+```
+ReactionT5v2/
+├── CompoundT5/                     # Codes used for data processing and compound pretraining
+│ └── README.md                     # More detailed README file for CompoundT5 creation
+├── data/                           # Datasets
+├── task_forward/                   # Forward prediction and finetuning
+├── task_retrosynthesis/            # Retrosynthesis prediction and finetuning
+├── task_yield/                     # Yield prediction and finetuning
+└── README.md                       # This README file
+```
 
 # Authors
+
 Tatsuya Sagawa, Ryosuke Kojima
 
 # Citation
+
 ```bibtex
 @article{Sagawa2025,
   title   = {ReactionT5: a pre-trained transformer model for accurate chemical reaction prediction with limited data},
@@ -235,3 +263,4 @@ Tatsuya Sagawa, Ryosuke Kojima
   doi     = {10.1186/s13321-025-01075-4},
   url     = {https://doi.org/10.1186/s13321-025-01075-4}
 }
+```

@@ -1,6 +1,6 @@
 *.ipynb_checkpoints
 __pycache__
-*.csv
+# *.csvs
 *.tsv
 *.smi
 *.bin
@@ -15,5 +15,6 @@ __pycache__
 *.safetensors
 *.npy
 *.pkl
+31k_uspto
 
 !data/demo_reaction_data.csv
