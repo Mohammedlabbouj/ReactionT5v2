@@ -1,4 +1,4 @@
-MC,Reactants,Reagents,Products
+MC,REACTANT,REAGENT,PRODUCT
 Vilsmeier_formylation,O=Cc1ccc2cc[nH]c2c1.CN(C)C=O,O=P(Cl)(Cl)Cl.O,O=Cc1ccc2c(C=O)c[nH]c2c1
 Jones_oxidation,NC(=O)N1c2ccccc2CC(O)c2ccccc21,[O]=[Cr](=[O])([OH])[OH],NC(=O)N1c2ccccc2CC(=O)c2ccccc21
 Paal_Knorr_pyrrole_synthesis,O=C(CC1CCCCC1=O)c1ccccc1.Nc1cccc(C(=O)O)c1,[H+],O=C(O)c1cccc(-n2c(-c3ccccc3)cc3c2CCCC3)c1

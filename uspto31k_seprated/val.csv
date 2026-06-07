@@ -1,4 +1,4 @@
-MC,Reactants,Reagents,Products
+MC,REACTANT,REAGENT,PRODUCT
 Mitsunobu,O=[N+](O)c1ncc(Cl)cc1O.OCC1CCCC1,c1ccc(P(c2ccccc2)c2ccccc2)cc1.CCOC(=O)N=NC(=O)OCC,O=[N+](O)c1ncc(Cl)cc1OCC1CCCC1
 alcohol_attack_to_carbonyl_or_sulfonyl,COc1ccc(CNc2nc(SC)nc(Cl)c2C(=O)Cl)cc1Cl.OCCOCc1ccccc1,[H-].[Na+],COc1ccc(CNc2nc(SC)nc(Cl)c2C(=O)OCCOCc2ccccc2)cc1Cl
 Boc_deprotection,CN(CCNC1CCCC(Nc2nc(-c3c[nH]c4ncc(Cl)cc34)ncc2F)C1)C(=O)OC(C)(C)C,[H+],CNCCNC1CCCC(Nc2nc(-c3c[nH]c4ncc(Cl)cc34)ncc2F)C1

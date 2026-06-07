@@ -1,4 +1,4 @@
-MC,Reactants,Reagents,Products
+MC,REACTANT,REAGENT,PRODUCT
 Swern_oxidation,CN(CCO)C(=O)OC(C)(C)C,O=C(Cl)C(=O)Cl.CS(C)=O.CCN(CC)CC,CN(CC=O)C(=O)OC(C)(C)C
 SN2,CC(CCCc1ccc(F)cc1)C1=CC(O)(O)C2=C3CNCCC3C(C)(C)OC2=C1.BrCC1CC1,,CC(CCCc1ccc(F)cc1)C1=CC(O)(O)C2=C3CN(CC4CC4)CCC3C(C)(C)OC2=C1
 alcohol_attack_to_carbonyl_or_sulfonyl,CC(CO)NC(=O)OC(C)(C)C.CS(=O)(=O)Cl,[H-].[Na+],CC(COS(C)(=O)=O)NC(=O)OC(C)(C)C
