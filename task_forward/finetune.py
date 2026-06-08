@@ -112,6 +112,12 @@ def parse_args():
         help="The name of a pretrained model or path to a model which you want to finetune on your dataset. You can use your local models or models uploaded to hugging face.",
     )
     parser.add_argument(
+        "--resume_from_checkpoint",
+        type=str,
+        default=None,
+        help="Checkpoint path to resume training from, for example output_dir/checkpoint-1000.",
+    )
+    parser.add_argument(
         "--debug", action="store_true", default=False, help="Enable debug mode."
     )
     parser.add_argument(
@@ -313,7 +319,7 @@ if __name__ == "__main__":
         ],
     )
 
-    train_result = trainer.train()
+    train_result = trainer.train(resume_from_checkpoint=CFG.resume_from_checkpoint)
     trainer.save_metrics("train", train_result.metrics)
     trainer.save_state()
 
