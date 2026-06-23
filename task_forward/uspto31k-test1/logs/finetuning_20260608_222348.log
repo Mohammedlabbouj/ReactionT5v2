@@ -1,0 +1,73 @@
+2026-06-08 22:23:48,721 - INFO - ================================================================================
+2026-06-08 22:23:48,722 - INFO - Starting Fine-tuning Process
+2026-06-08 22:23:48,722 - INFO - ================================================================================
+2026-06-08 22:23:48,722 - INFO - Log file: best-31kuspto-test1/logs/finetuning_20260608_222348.log
+2026-06-08 22:23:48,722 - INFO - Device: cuda
+2026-06-08 22:23:48,722 - INFO - Random seed: 42
+2026-06-08 22:23:48,722 - INFO - 
+================================================================================
+2026-06-08 22:23:48,722 - INFO - Loading Training Data
+2026-06-08 22:23:48,722 - INFO - ================================================================================
+2026-06-08 22:23:48,722 - INFO - Training data path: ../uspto31k_seprated/train.csv
+2026-06-08 22:23:48,722 - INFO - Validation data path: ../uspto31k_seprated/val.csv
+2026-06-08 22:23:49,970 - INFO - Training set size: 23565
+2026-06-08 22:23:49,970 - INFO - Validation set size: 3114
+2026-06-08 22:23:49,970 - INFO - 
+================================================================================
+2026-06-08 22:23:49,970 - INFO - Preparing Data
+2026-06-08 22:23:49,970 - INFO - ================================================================================
+2026-06-08 22:23:49,976 - INFO - Input and target columns created
+2026-06-08 22:23:49,976 - INFO - Final training set size: 23565
+2026-06-08 22:23:49,976 - INFO - Final validation set size: 3114
+2026-06-08 22:23:49,990 - INFO - Dataset dictionary created
+2026-06-08 22:23:49,990 - INFO - 
+================================================================================
+2026-06-08 22:23:49,990 - INFO - Loading Model and Tokenizer
+2026-06-08 22:23:49,990 - INFO - ================================================================================
+2026-06-08 22:23:49,991 - INFO - Model: sagawa/ReactionT5v2-forward
+2026-06-08 22:23:52,286 - INFO - Tokenizer loaded successfully
+2026-06-08 22:23:53,388 - INFO - Model loaded and moved to cuda
+2026-06-08 22:23:53,388 - INFO - 
+================================================================================
+2026-06-08 22:23:53,388 - INFO - Preprocessing and Tokenizing Data
+2026-06-08 22:23:53,388 - INFO - ================================================================================
+2026-06-08 22:23:53,388 - INFO - Max input length: 200
+2026-06-08 22:23:53,388 - INFO - Max target length: 150
+2026-06-08 22:23:55,287 - INFO - Data tokenization completed
+2026-06-08 22:23:55,287 - INFO - Data collator created
+2026-06-08 22:23:55,287 - INFO - 
+================================================================================
+2026-06-08 22:23:55,287 - INFO - Training Configuration
+2026-06-08 22:23:55,287 - INFO - ================================================================================
+2026-06-08 22:23:55,287 - INFO - Output directory: best-31kuspto-test1
+2026-06-08 22:23:55,287 - INFO - Learning rate: 0.0002
+2026-06-08 22:23:55,288 - INFO - Batch size: 16
+2026-06-08 22:23:55,288 - INFO - Epochs: 100
+2026-06-08 22:23:55,288 - INFO - Weight decay: 0.01
+2026-06-08 22:23:55,288 - INFO - Evaluation strategy: epoch
+2026-06-08 22:23:55,288 - INFO - Eval beams: 5
+2026-06-08 22:23:55,288 - INFO - FP16 enabled: False
+2026-06-08 22:23:55,367 - WARNING - [RANK 0] Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+2026-06-08 22:23:55,371 - INFO - Trainer initialized
+2026-06-08 22:23:55,371 - INFO - 
+================================================================================
+2026-06-08 22:23:55,371 - INFO - Starting Training
+2026-06-08 22:23:55,371 - INFO - ================================================================================
+2026-06-08 22:28:52,697 - INFO - Epoch 1.0: Eval Accuracy = 0.9820, Eval Loss = 0.0027
+2026-06-08 22:33:46,497 - INFO - Epoch 2.0: Eval Accuracy = 0.9865, Eval Loss = 0.0027
+2026-06-08 22:38:40,887 - INFO - Epoch 3.0: Eval Accuracy = 0.9820, Eval Loss = 0.0036
+2026-06-08 22:43:35,660 - INFO - Epoch 4.0: Eval Accuracy = 0.9798, Eval Loss = 0.0045
+2026-06-08 22:48:31,275 - INFO - Epoch 5.0: Eval Accuracy = 0.9801, Eval Loss = 0.0043
+2026-06-08 22:53:25,333 - INFO - Epoch 6.0: Eval Accuracy = 0.9811, Eval Loss = 0.0039
+2026-06-08 22:58:21,115 - INFO - Epoch 7.0: Eval Accuracy = 0.9756, Eval Loss = 0.0052
+2026-06-08 23:03:16,225 - INFO - Epoch 8.0: Eval Accuracy = 0.9775, Eval Loss = 0.0055
+2026-06-08 23:08:09,918 - INFO - Epoch 9.0: Eval Accuracy = 0.9778, Eval Loss = 0.0043
+2026-06-08 23:13:04,228 - INFO - Epoch 10.0: Eval Accuracy = 0.9737, Eval Loss = 0.0050
+2026-06-08 23:17:57,703 - INFO - Epoch 11.0: Eval Accuracy = 0.9769, Eval Loss = 0.0048
+2026-06-08 23:22:51,571 - INFO - Epoch 12.0: Eval Accuracy = 0.9804, Eval Loss = 0.0052
+2026-06-08 23:22:55,939 - INFO - 
+================================================================================
+2026-06-08 23:22:55,939 - INFO - Training Completed Successfully
+2026-06-08 23:22:55,939 - INFO - ================================================================================
+2026-06-08 23:22:56,977 - INFO - Best model saved to ./best_model
+2026-06-08 23:22:56,977 - INFO - Full logs available at: best-31kuspto-test1/logs/finetuning_20260608_222348.log

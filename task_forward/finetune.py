@@ -71,7 +71,10 @@ class TextFileLoggingCallback(TrainerCallback):
             self._write(f"Epoch {epoch_text} | step {state.global_step}: {formatted_logs}")
 
     def on_save(self, args, state, control, **kwargs):
-        self._write(f"Checkpoint saved at step {state.global_step}: {state.best_model_checkpoint or args.output_dir}")
+        checkpoint_path = os.path.join(args.output_dir, f"checkpoint-{state.global_step}")
+        self._write(f"Checkpoint saved at step {state.global_step}: {checkpoint_path}")
+        if state.best_model_checkpoint:
+            self._write(f"Current best checkpoint: {state.best_model_checkpoint}")
 
     def on_train_end(self, args, state, control, **kwargs):
         self._write("")
@@ -302,8 +305,8 @@ if __name__ == "__main__":
         greater_is_better=True
     )
 
-    model.config.eval_beams = CFG.eval_beams
-    model.config.max_length = CFG.target_max_length
+    model.generation_config.num_beams = CFG.eval_beams
+    model.generation_config.max_length = CFG.target_max_length
     log_file_path = os.path.join(CFG.output_dir, "log.txt")
     trainer = Seq2SeqTrainer(
         model,
